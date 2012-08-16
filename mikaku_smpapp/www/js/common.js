@@ -45,15 +45,13 @@ $(document).on('pagebeforecreate', '#home', function(e){
 });
 
 /* 共通フッターの差し込み処理 */
-$(document).on('pagebeforecreate', 'div[data-role=page]', function(e){
+$(document).on('pageinit', 'div[data-role=page]', function(e){
 	var self = this;
 	$.ajax({
 		url: "footer.html",
 		dataType: "html",
 		cache: true,
-		async: false,
 		success: function(d){
-			$("#footer_area", self).html("");
 			$("#footer_area", self).append(d);
 		}
 	});
