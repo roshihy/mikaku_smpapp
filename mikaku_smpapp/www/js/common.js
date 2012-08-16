@@ -2,15 +2,17 @@
 
 /* jQueryMobileの初期化 */
 $(document).on("mobileinit", function(){
-    $.mobile.page.prototype.options.addBackBtn = true;
+	$.mobile.page.prototype.options.addBackBtn = true;
     $.mobile.page.prototype.options.backBtnText = "戻る";
+    $.mobile.loadingMessage = "読み込み中..";
+    $.mobile.pageLoadErrorMessage = "読み込みに失敗しました";
 });
 
 /* GoogleMapsの差し込み処理 */
 $(document).on('pageinit', '#access', function(e){
 	//GoogleMapsの追加
 	var addJs = {
-			map:{
+			map: {
 				type: "text/javascript",
 				src: "js/map.js",
 			}
@@ -23,13 +25,15 @@ $(document).on('pageinit', '#access', function(e){
 	}
 });
 
+
 /* ツイートの差し込み処理 */
-$(document).on('pageshow', '#home', function(e){
+$(document).on('pagebeforecreate', '#home', function(e){
 	var self = this;
 	//tweetの追加
 	$.ajax({
 		url: "http://search.twitter.com/search.json?q=from:Mikaku_mayuge&rpp=10&lang=ja",
 		dataType: "jsonp",
+		async: false,
 		success: function(json){
 			var tweets = json.results;
 			$("#tweet_area").html("");
@@ -41,15 +45,16 @@ $(document).on('pageshow', '#home', function(e){
 });
 
 /* 共通フッターの差し込み処理 */
-$(document).on('pageinit', '*', function(e){
+$(document).on('pagebeforecreate', 'div[data-role=page]', function(e){
 	var self = this;
 	$.ajax({
-		type: "GET",
 		url: "footer.html",
 		dataType: "html",
 		cache: true,
+		async: false,
 		success: function(d){
-			$("#footer_area", self).html(d);
+			$("#footer_area", self).html("");
+			$("#footer_area", self).append(d);
 		}
 	});
 });
